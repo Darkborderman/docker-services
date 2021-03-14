@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  docker-registry:
+    container_name: docker-registry
+    image: registry:2
+    restart: always
+    ports:
+      - 5000:5000
+    volumes:
+      - ./config.yml:/etc/docker/registry/config.yml
+      # password file
+      # you'll need to uncomment `auth` in config.yml
+      # - ./.htpasswd:/.htpasswd
+      - ./registry:/var/lib/registry
+      # STRONGLY suggest using HTTPS to avoid bullshits
+      # - ./privkey1.pem:/privkey1.pem
+      # - ./fullchain1.pem:/fullchain1.pem
+  docker-ui:
+    image: joxit/docker-registry-ui:static
+    ports:
+      - 8080:80
+    environment:
+      - REGISTRY_TITLE=My Private Docker Registry
+      - REGISTRY_URL=http://docker-registry:5000
+      - DELETE_IMAGES=false
+    depends_on:
+      - docker-registry

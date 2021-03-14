@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  emqx:
+    container_name: emqx
+    image: emqx/emqx:latest
+    ports:
+      - 18083:18083
+      - 1883:1883
+    network_mode: host
+    volumes:
+      - ./acl.conf:/opt/emqx/etc/acl.conf

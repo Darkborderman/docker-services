@@ -1,0 +1,17 @@
+# This is an example of scaling multiple container and use nginx as a load balancer
+version: "3"
+
+services:
+  api:
+    image: <image>:latest
+    ports:
+      - 5000
+
+  nginx:
+    image: nginx:1.13
+    ports:
+      - 5001:5001
+    volumes:
+      - './nginx.conf:/etc/nginx/nginx.conf'
+    depends_on:
+      - api

@@ -1,0 +1,10 @@
+route:
+  group_by: [prometheus, alertname]
+  receiver: slack-service-status
+
+receivers:
+- name: slack-service-status
+  slack_configs:
+  - api_url: {slack_url}
+    channel: {slack_channel}
+    text: "*Summary*: {{ .CommonAnnotations.summary }}\n *Description*: {{ .CommonAnnotations.description }}"

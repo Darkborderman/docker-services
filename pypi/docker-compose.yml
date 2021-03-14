@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  pypi-server:
+    image: stevearc/pypicloud
+    restart: always
+    network_mode: host
+    volumes:
+      - ./config.ini:/etc/pypicloud/config.ini
+    ports:
+      - 9999:9999

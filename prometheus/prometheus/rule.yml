@@ -1,0 +1,27 @@
+groups:
+  - name: targets
+    rules:
+    - alert: monitor_service_down
+      # select alert instance by expression
+      expr: up{job=~"monitoring"} == 0
+      for: 15s
+      labels:
+        severity: critical
+      # Annotations dict will be passed to Alertmanager
+      # Alertmanager can acquire content by {{ .CommonAnnotations.<name> }}
+      # ex {{ .CommonAnnotations.summary }} => "Monitor service non-operational"
+      annotations:
+        summary: "Target not reachable"
+        description: "{{ $labels.instance }} not reachable for 15 seconds."
+
+  # - name: containers
+  #   rules:
+  #   - alert: cadvisor_container_down
+  #     expr:  absent(container_memory_usage_bytes{job=~"cAdvisor-ncku|cAdvisor-prod-ec2|cAdvisor-ops-ec2"})
+  #     for: 5s
+  #     labels:
+  #       severity: critical
+  #     annotations:
+  #       instance: "{{ $labels.instance }}"
+  #       summary: "CAdvisor container down"
+  #       description: "{{ $labels.Name }} of job {{ $labels.job }} is down for more than 30 seconds."

@@ -1,0 +1,32 @@
+global:
+  scrape_interval: 10s
+  evaluation_interval: 10s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+      - targets:
+        - localhost:9093
+
+rule_files:
+  - "rule.yml"
+
+scrape_configs:
+  # Ref: https://prometheus.io/docs/prometheus/latest/configuration/configuration/
+  # This is a localhost example configuration
+  - job_name: 'monitoring'
+    static_configs:
+    - targets:
+      - localhost:9100
+      - localhost:8080
+  # This is an EC2 example configuration
+  - job_name: monitoring-ec2
+    ec2_sd_configs:
+      - region: us-east-1
+        access_key: {access_key}
+        secret_key: {secret_key}
+        port: 9100
+        filters:
+          - name: tag:Name
+            values:
+              - filter-instance-by-Name-tag

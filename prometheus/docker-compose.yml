@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  alertmanager:
+    image: prom/alertmanager
+    container_name: alertmanager
+    restart: always
+    network_mode: host
+    ports:
+      - 9093:9093
+    volumes:
+      - ./alertmanager:/etc/alertmanager/
+    command:
+      - '--config.file=/etc/alertmanager/alert.yml'
+      - '--storage.path=/alertmanager'
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    restart: always
+    network_mode: host
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus/:/etc/prometheus
+      - prometheus-storage:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'

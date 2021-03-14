@@ -1,0 +1,43 @@
+# This will create 2 container(1 master, 1 slave)
+# The slave is using streaming replication, queries will stream to slave continuously
+version: '3'
+
+services:
+  master:
+    image: bitnami/postgresql:11
+    network_mode: host
+    ports:
+      - 5432
+    volumes:
+      - 'postgresql_master_data:/bitnami/postgresql'
+    environment:
+      - POSTGRESQL_REPLICATION_MODE=master
+      - POSTGRESQL_REPLICATION_USER=repl_user
+      - POSTGRESQL_REPLICATION_PASSWORD=repl_password
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_PASSWORD=password
+      - POSTGRESQL_PORT_NUMBER=5432
+  slave:
+    image: bitnami/postgresql:11
+    network_mode: host
+    ports:
+        - 5433
+    depends_on:
+      - master
+    volumes:
+      - 'postgresql_slave_data:/bitnami/postgresql'
+    environment:
+      - POSTGRESQL_REPLICATION_MODE=slave
+      - POSTGRESQL_REPLICATION_USER=repl_user
+      - POSTGRESQL_REPLICATION_PASSWORD=repl_password
+      - POSTGRESQL_MASTER_HOST=localhost
+      - POSTGRESQL_PASSWORD=password
+      - POSTGRESQL_MASTER_PORT_NUMBER=5003
+      - POSTGRESQL_PORT_NUMBER=5433
+      - ALLOW_EMPTY_PASSWORD=yes
+
+volumes:
+  postgresql_master_data:
+    driver: local
+  postgresql_slave_data:
+    driver: local

@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  jenkins-server:
+    image: jenkinsci/blueocean
+    network_mode: host
+    container_name: jenkins_server
+    ports:
+      - 8080:8080
+    volumes:
+      - jenkins_data:/var/jenkins_home
+    restart: always
+
+volumes:
+  jenkins_data:
+    name: jenkins_data
